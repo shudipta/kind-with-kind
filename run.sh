@@ -2,10 +2,15 @@
 
 export NODE_VERSION=${NODE_VERSION:-v1.17.0}
 
-kind create cluster --config https://raw.githubusercontent.com/shudipta/play-with-kind/master/kind.yaml --image kindest/node:$NODE_VERSION
+wget https://raw.githubusercontent.com/shudipta/play-with-kind/master/kind.yaml
+kind create cluster --config ./kind.yaml --image kindest/node:$NODE_VERSION
+
 echo "waiting for nodes to be ready ..."
 kubectl wait --for=condition=Ready nodes --all --timeout=5m
 kubectl get nodes
+
+rm ./kind.yaml
+
 echo
 echo "installing local-path provisioner ..."
 kubectl delete storageclass --all
